@@ -18,10 +18,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
+@Component
 public class EventsdemoActivator extends BaseModuleActivator implements ApplicationContextAware, DaemonTokenAware {
 	
 	private static ApplicationContext applicationContext;
@@ -47,7 +49,7 @@ public class EventsdemoActivator extends BaseModuleActivator implements Applicat
 			
 			eventsDemoConfig.subscribeToEvents();
 			
-			log.info("Client Registry Module started");
+			log.info("Events demo started");
 		}
 		catch (Exception e) {
 			log.error(e.getMessage());

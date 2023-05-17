@@ -21,13 +21,18 @@
 	
 	<!-- Extensions -->
 	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.eventsdemo.extension.html.AdminList</class>
+		<!-- <point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.eventsdemo.extension.html.AdminList</class> -->
 	</extension>
 
 	<aware_of_modules>
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>
+
+	<require_modules>
+	  <require_module>org.openmrs.event </require_module>
+	   <require_module>org.openmrs.module.fhir2 </require_module>
+	</require_modules>
 	
 	
 	<!-- AOP

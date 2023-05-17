@@ -18,23 +18,23 @@ import org.apache.commons.logging.LogFactory;
 
 @Component
 public class PatientListener implements EventListener {
-    
-    private DaemonToken daemonToken;
-    
-    private Log log = LogFactory.getLog(this.getClass());
-
-    @Autowired
-    PatientService patientService;
-    
-    public DaemonToken getDaemonToken() {
-        return daemonToken;
-    }
-    
-    public void setDaemonToken(DaemonToken daemonToken) {
-        this.daemonToken = daemonToken;
-    }
-    
-    @Override
+	
+	private DaemonToken daemonToken;
+	
+	private Log log = LogFactory.getLog(this.getClass());
+	
+	@Autowired
+	PatientService patientService;
+	
+	public DaemonToken getDaemonToken() {
+		return daemonToken;
+	}
+	
+	public void setDaemonToken(DaemonToken daemonToken) {
+		this.daemonToken = daemonToken;
+	}
+	
+	@Override
     public void onMessage(Message message) {
         try {
             Daemon.runInDaemonThread(() -> {
@@ -51,34 +51,33 @@ public class PatientListener implements EventListener {
         }
         
     }
-    
-    private void processMessage(Message message) throws JMSException {
-        if (message instanceof MapMessage) {
-            MapMessage mapMessage = (MapMessage) message;
-            
-            String uuid;
-            try {
-                uuid = mapMessage.getString("uuid");
-                log.debug(String.format("Handling patient %s", uuid));
-            }
-            catch (JMSException e) {
-                log.error("Exception caught while trying to get patient uuid for event.", e);
-                return;
-            }
-            
-            if (uuid == null || StringUtils.isBlank(uuid)) {
-                return;
-            }
-            
-            Patient patient;
-            patient = patientService.getPatientByUuid(uuid);
-            
-            if (mapMessage.getJMSDestination().toString().equals(EventsDemoConstants.PATIENT_UPDATE_MESSAGE_DESTINATION)) {
-               
-            } else {
-               
-            }
-        }
-    }
-    
+	
+	private void processMessage(Message message) throws JMSException {
+		if (message instanceof MapMessage) {
+			MapMessage mapMessage = (MapMessage) message;
+			
+			String uuid;
+			try {
+				uuid = mapMessage.getString("uuid");
+				log.debug(String.format("Handling patient %s", uuid));
+			}
+			catch (JMSException e) {
+				log.error("Exception caught while trying to get patient uuid for event.", e);
+				return;
+			}
+			
+			if (uuid == null || StringUtils.isBlank(uuid)) {
+				return;
+			}
+			
+			Patient patient = patientService.getPatientByUuid(uuid);
+			
+			if (mapMessage.getJMSDestination().toString().equals(EventsDemoConstants.PATIENT_UPDATE_MESSAGE_DESTINATION)) {
+				System.out.print("PATIENT UPDATED ---->" + patient.getPersonName());
+			} else {
+				System.out.print("PATIENT CREATED --->" + patient.getPersonName());
+			}
+		}
+	}
+	
 }

@@ -27,22 +27,25 @@ import org.springframework.stereotype.Component;
  */
 @Component("eventsdemo.EventsdemoConfig")
 public class EventsdemoConfig {
+	
 	private Log log = LogFactory.getLog(this.getClass());
+	
 	private final AtomicBoolean isRunning = new AtomicBoolean(false);
+	
 	private DaemonToken daemonToken;
-
+	
 	@Autowired
 	private EncounterListener encounterListener;
-
+	
 	@Autowired
 	private PatientListener patientListener;
 	
 	public final static String MODULE_PRIVILEGE = "Eventsdemo Privilege";
-
+	
 	public void setDaemonToken(DaemonToken daemonToken) {
 		this.daemonToken = daemonToken;
 	}
-
+	
 	public void subscribeToEvents() {
 		log.info("Enabling Events Subscription");
 		
@@ -54,7 +57,7 @@ public class EventsdemoConfig {
 		if (!isRunning.get()) {
 			Event.subscribe(Patient.class, Event.Action.CREATED.toString(), patientListener);
 			Event.subscribe(Patient.class, Event.Action.UPDATED.toString(), patientListener);
-
+			
 			Event.subscribe(Encounter.class, Event.Action.CREATED.toString(), encounterListener);
 			Event.subscribe(Encounter.class, Event.Action.UPDATED.toString(), encounterListener);
 		}
@@ -68,7 +71,7 @@ public class EventsdemoConfig {
 		if (isRunning.get()) {
 			Event.unsubscribe(Patient.class, Event.Action.CREATED, patientListener);
 			Event.unsubscribe(Patient.class, Event.Action.UPDATED, patientListener);
-
+			
 			Event.unsubscribe(Encounter.class, Event.Action.CREATED, encounterListener);
 			Event.unsubscribe(Encounter.class, Event.Action.UPDATED, encounterListener);
 		}
