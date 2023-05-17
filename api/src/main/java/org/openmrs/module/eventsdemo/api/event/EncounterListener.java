@@ -72,6 +72,10 @@ public class EncounterListener implements EventListener {
 			
 			Encounter encounter = encounterService.getEncounterByUuid(uuid);
 			
+			if (encounter.getEncounterType().getName().equals(" ")) {
+				
+			}
+			
 			if (mapMessage.getJMSDestination().toString().equals(EventsDemoConstants.ENCOUNTER_UPDATE_MESSAGE_DESTINATION)) {
 				System.out.println("ENCOUNTER Updated ====>" + encounter.getEncounterType().getName());
 			} else {

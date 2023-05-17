@@ -51,17 +51,15 @@
 	 /Required Privileges -->
 
 
-	<!-- Required Global Properties 
+	
 	<globalProperty>
-		<property>@MODULE_ID@.someProperty</property>
-		<defaultValue></defaultValue>
+		<property>@MODULE_ID@.shrUrl</property>
+		<defaultValue>http://openhim-core:5001/fhir</defaultValue>
 		<description>
-			A description of the global property goes here.  The description
-			should explain enough for administrators to understand the purpose
-			and possible values for the global property.
+			SHR URL
 		</description>
 	</globalProperty>
-	/Required Global Properties -->
+	
 	
 	<!--
 	<dwr>

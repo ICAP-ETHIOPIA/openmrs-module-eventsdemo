@@ -5,13 +5,21 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.openmrs.Patient;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.eventsdemo.EventsDemoConstants;
+import org.openmrs.module.fhir2.api.FhirPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +33,17 @@ public class PatientListener implements EventListener {
 	
 	@Autowired
 	PatientService patientService;
+	
+	@Autowired
+	FhirPatientService fhirPatientService;
+	
+	@Autowired
+	@Qualifier("adminService")
+	AdministrationService administrationService;
+	
+	@Autowired
+	@Qualifier("fhirR4")
+	private FhirContext fhirContext;
 	
 	public DaemonToken getDaemonToken() {
 		return daemonToken;
@@ -70,6 +89,7 @@ public class PatientListener implements EventListener {
 				return;
 			}
 			
+			sendPatient(uuid);
 			Patient patient = patientService.getPatientByUuid(uuid);
 			
 			if (mapMessage.getJMSDestination().toString().equals(EventsDemoConstants.PATIENT_UPDATE_MESSAGE_DESTINATION)) {
@@ -78,6 +98,18 @@ public class PatientListener implements EventListener {
 				System.out.print("PATIENT CREATED --->" + patient.getPersonName());
 			}
 		}
+	}
+	
+	private void sendPatient(String uuid) {
+		String url = administrationService.getGlobalProperty("eventsdemo.shrUrl", "http://openhim-core:5001/fhir");
+		IGenericClient client = fhirContext.newRestfulGenericClient(url);
+		BasicAuthInterceptor auth = new BasicAuthInterceptor("user", "pass");
+		client.registerInterceptor(auth);
+		
+		org.hl7.fhir.r4.model.Patient fhirPatient = fhirPatientService.get(uuid);
+		System.out.println("............ debug FHIR PATIENT............");
+		System.out.println(fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString(fhirPatient));
+		client.update().resource(fhirPatient).execute();
 	}
 	
 }
