@@ -13,27 +13,28 @@
         for a list of supported elements and attributes
     -->
  
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and EventsdemoDaoTest -->
- 	<!--
-	<changeSet id="eventsdemo-2016-08-02-12-21" author="raff">
-		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="eventsdemo_item"/></not>
-		</preConditions>
-		<comment>
-			Creating the eventsdemo_item table
-		</comment>
-		<createTable tableName="eventsdemo_item">
-			<column name="eventsdemo_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
-		</createTable>
-        <addForeignKeyConstraint constraintName="eventsdemo_item_owner_fk" baseTableName="eventsdemo_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
+ 	<changeSet id="create-demo-task-2023-05-03" author="mozzy" dbms="mysql">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.eventsdemo.api.scheduler.DemoTask'
+                And name = 'DEMO TASK'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting Demo Task into 'schedule_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="DEMO TASK" />
+            <column name="description" value="DEMO TASK" />
+            <column name="schedulable_class" value="org.openmrs.module.eventsdemo.api.scheduler.DemoTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="now()" />
+            <column name="repeat_interval" value="30" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="0"/>
+            <column name="started" value="0"/>
+            <column name="uuid" value="ad6cf96b-10c8-479c-ae6a-9382e2c9a3ac" />
+        </insert>
+    </changeSet>
  
 </databaseChangeLog>
