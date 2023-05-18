@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.eventsdemo.api.dao;
 
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
@@ -33,5 +35,13 @@ public class EventsdemoDao {
 	public Item saveItem(Item item) {
 		getSession().saveOrUpdate(item);
 		return item;
+	}
+	
+	public void deleteItem(Item item) {
+		getSession().delete(item);
+	}
+	
+	public List<Item> getAllItems() {
+		return getSession().createCriteria(Item.class).list();
 	}
 }

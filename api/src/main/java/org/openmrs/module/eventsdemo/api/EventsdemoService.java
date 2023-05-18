@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.eventsdemo.api;
 
+import java.util.List;
+
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -30,7 +32,7 @@ public interface EventsdemoService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	@Authorized()
+	//@Authorized()
 	@Transactional(readOnly = true)
 	Item getItemByUuid(String uuid) throws APIException;
 	
@@ -42,7 +44,13 @@ public interface EventsdemoService extends OpenmrsService {
 	 * @return
 	 * @throws APIException
 	 */
-	@Authorized(EventsdemoConfig.MODULE_PRIVILEGE)
+	//@Authorized(EventsdemoConfig.MODULE_PRIVILEGE)
 	@Transactional
 	Item saveItem(Item item) throws APIException;
+	
+	@Transactional
+	void deleteItem(Item item) throws APIException;
+	
+	@Transactional
+	List<Item> getAllItems() throws APIException;
 }

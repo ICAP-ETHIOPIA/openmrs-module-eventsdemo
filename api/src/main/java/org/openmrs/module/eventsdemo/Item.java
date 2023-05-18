@@ -24,9 +24,10 @@ import javax.persistence.Table;
 /**
  * Please note that a corresponding table schema must be created in liquibase.xml.
  */
-//Uncomment 2 lines below if you want to make the Item class persistable, see also EventsdemoDaoTest and liquibase.xml
-//@Entity(name = "eventsdemo.Item")
-//@Table(name = "eventsdemo_item")
+// Uncomment 2 lines below if you want to make the Item class persistable, see
+// also EventsdemoDaoTest and liquibase.xml
+@Entity
+@Table(name = "eventsdemo_item")
 public class Item extends BaseOpenmrsData {
 	
 	@Id
@@ -41,6 +42,9 @@ public class Item extends BaseOpenmrsData {
 	@Basic
 	@Column(name = "description", length = 255)
 	private String description;
+	
+	@Column(name = "failedPatientUuid", length = 225)
+	private String failedPatientUuid;
 	
 	@Override
 	public Integer getId() {
@@ -77,4 +81,13 @@ public class Item extends BaseOpenmrsData {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public void setFailedPatientUuid(String failedPatientUuid) {
+		this.failedPatientUuid = failedPatientUuid;
+	}
+	
+	public String getFailedPatientUuid() {
+		return this.failedPatientUuid;
+	}
+	
 }

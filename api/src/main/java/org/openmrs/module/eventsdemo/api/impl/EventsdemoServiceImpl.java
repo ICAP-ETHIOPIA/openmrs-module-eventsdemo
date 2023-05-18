@@ -9,15 +9,19 @@
  */
 package org.openmrs.module.eventsdemo.api.impl;
 
+import java.util.List;
+
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.eventsdemo.Item;
 import org.openmrs.module.eventsdemo.api.EventsdemoService;
 import org.openmrs.module.eventsdemo.api.dao.EventsdemoDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EventsdemoServiceImpl extends BaseOpenmrsService implements EventsdemoService {
 	
+	@Autowired
 	EventsdemoDao dao;
 	
 	UserService userService;
@@ -48,5 +52,15 @@ public class EventsdemoServiceImpl extends BaseOpenmrsService implements Eventsd
 		}
 		
 		return dao.saveItem(item);
+	}
+	
+	@Override
+	public void deleteItem(Item item) throws APIException {
+		dao.deleteItem(item);
+	}
+	
+	@Override
+	public List<Item> getAllItems() throws APIException {
+		return dao.getAllItems();
 	}
 }

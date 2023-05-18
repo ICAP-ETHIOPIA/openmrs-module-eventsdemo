@@ -36,5 +36,35 @@
             <column name="uuid" value="ad6cf96b-10c8-479c-ae6a-9382e2c9a3ac" />
         </insert>
     </changeSet>
+
+    <changeSet id="eventsdemo-2016-08-02-12-21" author="demo">
+		<preConditions onFail="MARK_RAN">
+			<not><tableExists tableName="eventsdemo_item"/></not>
+		</preConditions>
+		<comment>
+			Creating the eventsdemo_item table
+		</comment>
+		<createTable tableName="eventsdemo_item">
+			<column name="eventsdemo_item_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+			<column name="owner" type="int" />
+			<column name="description" type="varchar(255)" />
+            <column name="failedPatientUuid" type="varchar(255)" />
+            <column name="date_voided" type="DATETIME"/>
+            <column name="date_changed" type="DATETIME"/>
+            <column name="date_created" type="DATETIME"/>
+            <column name="void_reason" type="varchar(255)" />
+            <column name="changed_by" type="int" />
+            <column name="voided_by" type="int" />
+            <column name="creator" type="int" />
+            <column defaultValueBoolean="false" name="voided" type="BOOLEAN"/>
+		</createTable>
+        <addForeignKeyConstraint constraintName="eventsdemo_item_owner_fk" baseTableName="eventsdemo_item" baseColumnNames="owner"  referencedTableName="users"
+                                 referencedColumnNames="user_id" />
+    </changeSet> 
  
 </databaseChangeLog>

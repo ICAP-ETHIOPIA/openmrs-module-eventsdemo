@@ -5,20 +5,18 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.openmrs.Patient;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.eventsdemo.EventsDemoConstants;
+import org.openmrs.module.eventsdemo.Item;
+import org.openmrs.module.eventsdemo.api.EventsDemoClient;
+import org.openmrs.module.eventsdemo.api.EventsdemoService;
 import org.openmrs.module.fhir2.api.FhirPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -35,15 +33,13 @@ public class PatientListener implements EventListener {
 	PatientService patientService;
 	
 	@Autowired
+	EventsdemoService eventsdemoService;
+	
+	@Autowired
 	FhirPatientService fhirPatientService;
 	
 	@Autowired
-	@Qualifier("adminService")
-	AdministrationService administrationService;
-	
-	@Autowired
-	@Qualifier("fhirR4")
-	private FhirContext fhirContext;
+	EventsDemoClient demoClient;
 	
 	public DaemonToken getDaemonToken() {
 		return daemonToken;
@@ -101,15 +97,28 @@ public class PatientListener implements EventListener {
 	}
 	
 	private void sendPatient(String uuid) {
-		String url = administrationService.getGlobalProperty("eventsdemo.shrUrl", "http://openhim-core:5001/fhir");
-		IGenericClient client = fhirContext.newRestfulGenericClient(url);
-		BasicAuthInterceptor auth = new BasicAuthInterceptor("user", "pass");
-		client.registerInterceptor(auth);
 		
 		org.hl7.fhir.r4.model.Patient fhirPatient = fhirPatientService.get(uuid);
 		System.out.println("............ debug FHIR PATIENT............");
-		System.out.println(fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString(fhirPatient));
-		client.update().resource(fhirPatient).execute();
+		System.out.println(demoClient.getFhirContext().newJsonParser().setPrettyPrint(true)
+		        .encodeResourceToString(fhirPatient));
+		try {
+			demoClient.geteventsDemoClient().update().resource(fhirPatient).execute();
+		}
+		catch (Exception e) {
+			log.error(" Failed to send Patient with uuid" + uuid, e);
+			saveFailedItem(uuid);
+			System.out.println(">> saved FAILED PATIENT UUID " + uuid);
+		}
+		
+	}
+	
+	private void saveFailedItem(String uuid) {
+		Item item = new Item();
+		item.setOwner(Context.getAuthenticatedUser());
+		item.setDescription("Patient UUID" + uuid);
+		item.setFailedPatientUuid(uuid);
+		eventsdemoService.saveItem(item);
 	}
 	
 }
