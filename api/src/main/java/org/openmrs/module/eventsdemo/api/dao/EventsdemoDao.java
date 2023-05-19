@@ -37,11 +37,22 @@ public class EventsdemoDao {
 		return item;
 	}
 	
+	public void setFlag(boolean isSent, String uuid) {
+		Item update = (Item) getSession().createCriteria(Item.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
+		update.setIsSent(isSent);
+		getSession().saveOrUpdate(update);
+	}
+	
 	public void deleteItem(Item item) {
 		getSession().delete(item);
 	}
 	
 	public List<Item> getAllItems() {
 		return getSession().createCriteria(Item.class).list();
+	}
+	
+	public List<Item> getAllUnsentItems() {
+		return getSession().createCriteria(Item.class).add(Restrictions.eq("isSent", false)).list();
+		
 	}
 }

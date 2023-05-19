@@ -118,6 +118,7 @@ public class PatientListener implements EventListener {
 		item.setOwner(Context.getAuthenticatedUser());
 		item.setDescription("Patient UUID" + uuid);
 		item.setFailedPatientUuid(uuid);
+		item.setIsSent(false);
 		eventsdemoService.saveItem(item);
 	}
 	

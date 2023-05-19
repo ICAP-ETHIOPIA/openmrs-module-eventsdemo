@@ -44,14 +44,15 @@ public class DemoTask extends AbstractTask implements ApplicationContextAware {
 		}
 		System.out.println(">>> EVENTS DEMO TASK EXECUTING");
 
-        List<Item> items = eventsdemoService.getAllItems();
+        List<Item> items = eventsdemoService.getAllUnsentItems();
 
         items.forEach( item -> {
             Patient patient = fhirPatientService.get(item.getFailedPatientUuid());
             System.out.println(">> failed taient UUID" + item.getFailedPatientUuid());
             try{
                 demoClient.geteventsDemoClient().update().resource(patient).execute();
-                eventsdemoService.deleteItem(item);
+				eventsdemoService.setFlag(true, item.getUuid());
+                //eventsdemoService.deleteItem(item);
             }catch(Exception e){
             }
             

@@ -61,6 +61,7 @@
             <column name="changed_by" type="int" />
             <column name="voided_by" type="int" />
             <column name="creator" type="int" />
+            <column name="isSent" type="boolean" />
             <column defaultValueBoolean="false" name="voided" type="BOOLEAN"/>
 		</createTable>
         <addForeignKeyConstraint constraintName="eventsdemo_item_owner_fk" baseTableName="eventsdemo_item" baseColumnNames="owner"  referencedTableName="users"

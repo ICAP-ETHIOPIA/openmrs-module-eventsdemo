@@ -46,6 +46,9 @@ public class Item extends BaseOpenmrsData {
 	@Column(name = "failedPatientUuid", length = 225)
 	private String failedPatientUuid;
 	
+	@Column(name = "isSent", length = 225)
+	private boolean isSent;
+	
 	@Override
 	public Integer getId() {
 		return id;
@@ -86,8 +89,16 @@ public class Item extends BaseOpenmrsData {
 		this.failedPatientUuid = failedPatientUuid;
 	}
 	
+	public void setIsSent(boolean isSent) {
+		this.isSent = isSent;
+	}
+	
 	public String getFailedPatientUuid() {
 		return this.failedPatientUuid;
+	}
+	
+	public boolean getIsent() {
+		return this.isSent;
 	}
 	
 }

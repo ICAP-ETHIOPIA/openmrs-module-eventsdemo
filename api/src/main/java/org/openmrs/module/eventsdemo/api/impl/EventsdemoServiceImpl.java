@@ -54,6 +54,10 @@ public class EventsdemoServiceImpl extends BaseOpenmrsService implements Eventsd
 		return dao.saveItem(item);
 	}
 	
+	public void setFlag(boolean isSent, String uuid) throws APIException {
+		dao.setFlag(isSent, uuid);
+	}
+	
 	@Override
 	public void deleteItem(Item item) throws APIException {
 		dao.deleteItem(item);
@@ -62,5 +66,9 @@ public class EventsdemoServiceImpl extends BaseOpenmrsService implements Eventsd
 	@Override
 	public List<Item> getAllItems() throws APIException {
 		return dao.getAllItems();
+	}
+	
+	public List<Item> getAllUnsentItems() throws APIException {
+		return dao.getAllUnsentItems();
 	}
 }

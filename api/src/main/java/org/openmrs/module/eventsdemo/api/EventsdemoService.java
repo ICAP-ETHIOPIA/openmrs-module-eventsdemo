@@ -49,8 +49,14 @@ public interface EventsdemoService extends OpenmrsService {
 	Item saveItem(Item item) throws APIException;
 	
 	@Transactional
+	void setFlag(boolean isSent, String uuid) throws APIException;
+	
+	@Transactional
 	void deleteItem(Item item) throws APIException;
 	
 	@Transactional
 	List<Item> getAllItems() throws APIException;
+	
+	@Transactional
+	List<Item> getAllUnsentItems() throws APIException;
 }
